@@ -1,0 +1,74 @@
+name: deepdo
+description: "A new Flutter project."
+# The following line prevents the package from being accidentally published to
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.0.7+8
+
+environment:
+  sdk: ^3.5.3
+
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  lottie:
+  flutter_launcher_icons:
+  firebase_auth:
+  cloud_firestore:
+  # firebase_core:
+  # For Google Sign-In
+  google_sign_in:
+  # For local storage
+  hive:
+  hive_flutter:
+  # For WebRTC (if you decide to implement it fully)
+  # flutter_webrtc: ^0.14.1
+  permission_handler:
+  flutter_local_notifications:
+  firebase_messaging:
+  shared_preferences:
+  cloud_functions:
+
+flutter_icons:
+  image_path: "assets/logo/DeepLogo.png"
+  android: true
+  ios: true
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  # rules and activating additional ones.
+  flutter_lints: ^4.0.0
+
+# The following section is specific to Flutter packages.
+flutter:
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/
+    - assets/json/
+    - assets/icons/
+    - assets/images/
+    - assets/logo/
+  # An image asset can refer to one or more resolution-specific "variants", see
+
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/to/font-from-package

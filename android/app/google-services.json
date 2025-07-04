@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "799615819708",
+    "project_id": "deepdomy",
+    "storage_bucket": "deepdomy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799615819708:android:6994575b8d8a02ab7555b9",
+        "android_client_info": {
+          "package_name": "com.deepdojoy.deepdo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9uoibV8drHtD3VeGX5bo9MDdBPwto618"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
