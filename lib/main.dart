@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, depend_on_referenced_packages
 
 import 'package:deepdo/app.dart';
 import 'package:deepdo/services/fcm_service.dart';
