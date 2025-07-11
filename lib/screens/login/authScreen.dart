@@ -22,6 +22,7 @@ class _AuthScreenState extends State<AuthScreen> {
   void initState() {
     super.initState();
     _checkIfLoggedIn();
+    checkLoginStatus();
   }
 
   Future<void> _checkIfLoggedIn() async {
@@ -31,6 +32,30 @@ class _AuthScreenState extends State<AuthScreen> {
     if (savedEmail != null && savedEmail.isNotEmpty) {
       Navigator.pushReplacementNamed(context, '/main_wrapper');
     }
+  }
+
+  Future<void> checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final name = prefs.getString('user_name');
+
+    if (name != null) {
+      Navigator.pushReplacementNamed(context, '/main_wrapper');
+    } else {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
+
+  Future<void> handleGuestLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_name') == null) {
+      int guestCounter = prefs.getInt('guest_counter') ?? 1;
+      String guestName = 'guest${guestCounter.toString().padLeft(4, '0')}';
+      await prefs.setString('user_name', guestName);
+      await prefs.setString('user_email', '');
+      await prefs.setInt('guest_counter', guestCounter + 1);
+    }
+
+    Navigator.pushReplacementNamed(context, '/main_wrapper');
   }
 
   bool _isLoading = false;
@@ -119,6 +144,23 @@ class _AuthScreenState extends State<AuthScreen> {
                             }
                           },
                         ),
+                  const SizedBox(height: 10),
+                  ElevatedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: appColor.mainColor,
+                      side: const BorderSide(color: appColor.mainColor),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 70, vertical: 5),
+                    ),
+                    icon: const Icon(
+                      Icons.person_outline,
+                      color: appColor.mainColor,
+                    ),
+                    label: const Text("Continue as Guest"),
+                    onPressed: () async {
+                      await handleGuestLogin();
+                    },
+                  ),
                   const Spacer(flex: 2),
                 ],
               ),
