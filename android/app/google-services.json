@@ -12,7 +12,20 @@
           "package_name": "com.deepdojoy.deepdo"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "799615819708-veap65fmnv5svia9gsv0en4tsiaae6jb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.deepdojoy.deepdo",
+            "certificate_hash": "ba45aadf8f8529519926b6c842468c29443c4184"
+          }
+        },
+        {
+          "client_id": "799615819708-tp1adkkorhf12q8somc11k730ht214gj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD9uoibV8drHtD3VeGX5bo9MDdBPwto618"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799615819708-tp1adkkorhf12q8somc11k730ht214gj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
