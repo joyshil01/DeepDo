@@ -1,10 +1,12 @@
-// ignore_for_file: deprecated_member_use, dead_code, file_names, use_build_context_synchronously
+// ignore_for_file: deprecated_member_use, dead_code, file_names, use_build_context_synchronously, avoid_print
 
 import 'dart:io';
+import 'package:deepdo/services/ads_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../providers/authService.dart';
+// import '../../providers/authService.dart';
 import '../../utils/colors.dart'; // Assuming this file defines appColor.mainColor
 
 class AuthScreen extends StatefulWidget {
@@ -16,13 +18,32 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   // Create an instance of your AuthService
-  final _authService = AuthService();
+  // final _authService = AuthService();
+
+  InterstitialAd? _interstitialAd;
 
   @override
   void initState() {
     super.initState();
     _checkIfLoggedIn();
     checkLoginStatus();
+
+    InterstitialAd.load(
+      adUnitId: AdHelper.getInterstatialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+              onAdDismissedFullScreenContent: (ad) {});
+          setState(() {
+            _interstitialAd = ad;
+          });
+        },
+        onAdFailedToLoad: (err) {
+          print('Failed to load an interstatial ad: ${err.message}');
+        },
+      ),
+    );
   }
 
   Future<void> _checkIfLoggedIn() async {
@@ -58,7 +79,7 @@ class _AuthScreenState extends State<AuthScreen> {
     Navigator.pushReplacementNamed(context, '/main_wrapper');
   }
 
-  bool _isLoading = false;
+  // bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -96,54 +117,55 @@ class _AuthScreenState extends State<AuthScreen> {
                   const Spacer(),
                   // Inside your AuthScreen.dart's build method
 
-                  _isLoading
-                      ? const CircularProgressIndicator() // 👈 Show this while signing in
-                      : ElevatedButton.icon(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: appColor.mainColor,
-                            side: const BorderSide(color: appColor.mainColor),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 70, vertical: 5),
-                          ),
-                          icon: const Icon(
-                            Icons
-                                .g_mobiledata, // You can use a real Google icon here
-                            color: appColor.mainColor,
-                          ),
-                          label: const Text("Sign in with Google"),
-                          onPressed: () async {
-                            setState(() {
-                              _isLoading = true; // 🔄 Start loading
-                            });
+                  // _isLoading
+                  //     ? const CircularProgressIndicator() // 👈 Show this while signing in
+                  //     : ElevatedButton.icon(
+                  //         style: OutlinedButton.styleFrom(
+                  //           foregroundColor: appColor.mainColor,
+                  //           side: const BorderSide(color: appColor.mainColor),
+                  //           padding: const EdgeInsets.symmetric(
+                  //               horizontal: 70, vertical: 5),
+                  //         ),
+                  //         icon: const Icon(
+                  //           Icons
+                  //               .g_mobiledata, // You can use a real Google icon here
+                  //           color: appColor.mainColor,
+                  //         ),
+                  //         label: const Text("Sign in with Google"),
+                  //         onPressed: () async {
+                  //           setState(() {
+                  //             _isLoading = true; // 🔄 Start loading
+                  //           });
 
-                            final user = await _authService.signInWithGoogle();
+                  //           final user = await _authService.signInWithGoogle();
 
-                            if (user != null) {
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-                              await prefs.setString(
-                                  'user_name', user.displayName ?? '');
-                              await prefs.setString(
-                                  'user_email', user.email ?? '');
+                  //           if (user != null) {
+                  //             final prefs =
+                  //                 await SharedPreferences.getInstance();
+                  //             await prefs.setString(
+                  //                 'user_name', user.displayName ?? '');
+                  //             await prefs.setString(
+                  //                 'user_email', user.email ?? '');
 
-                              if (!mounted) return;
-                              Navigator.pushReplacementNamed(
-                                  context, '/main_wrapper');
-                            } else {
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Login failed")),
-                                );
-                              }
-                            }
+                  //             if (!mounted) return;
+                  //             Navigator.pushReplacementNamed(
+                  //                 context, '/main_wrapper');
+                  //           } else {
+                  //             if (mounted) {
+                  //               ScaffoldMessenger.of(context).showSnackBar(
+                  //                 const SnackBar(content: Text("Login failed")),
+                  //               );
+                  //             }
+                  //           }
 
-                            if (mounted) {
-                              setState(() {
-                                _isLoading = false; // ✅ Stop loading
-                              });
-                            }
-                          },
-                        ),
+                  //           if (mounted) {
+                  //             setState(() {
+                  //               _isLoading = false; // ✅ Stop loading
+                  //             });
+                  //           }
+                  //         },
+                  //       ),
+
                   const SizedBox(height: 10),
                   ElevatedButton.icon(
                     style: OutlinedButton.styleFrom(
@@ -156,8 +178,9 @@ class _AuthScreenState extends State<AuthScreen> {
                       Icons.person_outline,
                       color: appColor.mainColor,
                     ),
-                    label: const Text("Continue as Guest"),
+                    label: const Text("Start"),
                     onPressed: () async {
+                      _interstitialAd?.show();
                       await handleGuestLogin();
                     },
                   ),

@@ -39,6 +39,9 @@
 
         <!-- Flutter engine config -->
         <meta-data android:name="flutterEmbedding" android:value="2" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8921243494709334~8837695308"/>
         <meta-data android:name="firebase_messaging_auto_init_enabled" android:value="false" />
         <meta-data android:name="firebase_messaging_viewport_metrics_enabled" android:value="false" />
 
