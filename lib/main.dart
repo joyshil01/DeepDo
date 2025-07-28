@@ -5,6 +5,7 @@ import 'package:deepdo/services/fcm_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -13,6 +14,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  RequestConfiguration configuration = RequestConfiguration(
+    tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+  );
+  MobileAds.instance.updateRequestConfiguration(configuration);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   if (Firebase.apps.isEmpty) {

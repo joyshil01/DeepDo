@@ -1,4 +1,8 @@
+// ignore_for_file: avoid_print, unused_field
+
+import 'package:deepdo/services/ads_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:async';
 
 import '../../utils/colors.dart'; // For Timer
@@ -17,13 +21,76 @@ class _FocusTimerScreenState extends State<FocusTimerScreen> {
   bool _isRunning = false;
   bool _isFocusSession = true; // True for focus, false for break
 
+  RewardedInterstitialAd? _rewardedInterstitialAd;
+  bool _isAdLoaded = false;
+
+  @override
+  void initState() {
+    _loadAd();
+    super.initState();
+  }
+
+  void _loadAd() {
+    RewardedInterstitialAd.load(
+      adUnitId: AdHelper.getRewardedInterstitialUnitId,
+      request: const AdRequest(),
+      rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          print('Rewarded Interstitial Ad loaded.');
+          setState(() {
+            _rewardedInterstitialAd = ad;
+            _isAdLoaded = true;
+          });
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              print('Ad dismissed.');
+              ad.dispose();
+              _loadAd(); // Load the next ad
+            },
+            onAdFailedToShowFullScreenContent: (ad, error) {
+              print('Ad failed to show: $error');
+              ad.dispose();
+              _loadAd();
+            },
+          );
+        },
+        onAdFailedToLoad: (error) {
+          print('Failed to load rewarded interstitial ad: $error');
+          setState(() {
+            _isAdLoaded = false;
+          });
+        },
+      ),
+    );
+  }
+
+  void _showAd() {
+    if (_rewardedInterstitialAd != null) {
+      _rewardedInterstitialAd!.show(
+        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+          print('User earned reward: ${reward.amount} ${reward.type}');
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Reward received: ${reward.amount} ${reward.type}"),
+          ));
+        },
+      );
+      _rewardedInterstitialAd = null;
+      _isAdLoaded = false;
+    } else {
+      print("Ad not ready yet.");
+    }
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
+    _rewardedInterstitialAd?.dispose();
     super.dispose();
   }
 
   void _startTimer() {
+    _showAd();
     setState(() {
       _isRunning = true;
     });
@@ -50,6 +117,7 @@ class _FocusTimerScreenState extends State<FocusTimerScreen> {
   }
 
   void _pauseTimer() {
+    _showAd();
     setState(() {
       _isRunning = false;
     });
@@ -57,6 +125,7 @@ class _FocusTimerScreenState extends State<FocusTimerScreen> {
   }
 
   void _resetTimer() {
+    _showAd();
     _timer?.cancel();
     setState(() {
       _isRunning = false;
